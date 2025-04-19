@@ -1,0 +1,7 @@
+scapy
+flask
+numpy
+scikit-learn
+cryptography
+geocoder
+requests
