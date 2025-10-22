@@ -1,7 +1,3 @@
-scapy
-flask
-numpy
-scikit-learn
-cryptography
-geocoder
-requests
+pip install flask scapy pandas matplotlib seaborn
+
+python security_analytics.py
