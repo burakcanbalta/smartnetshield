@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Security Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .critical { color: #dc3545; }
+        .high { color: #fd7e14; }
+        .medium { color: #ffc107; }
+        .low { color: #28a745; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Security Analytics Dashboard</h1>
+    
+    <div class="dashboard">
+        <div class="card">
+            <h3>📊 24h Security Overview</h3>
+            <p>Total Alerts: <strong>{{ total_alerts_24h }}</strong></p>
+            <p>Critical: <span class="critical">{{ severity_stats.get('CRITICAL', 0) }}</span></p>
+            <p>High: <span class="high">{{ severity_stats.get('HIGH', 0) }}</span></p>
+            <p>Medium: <span class="medium">{{ severity_stats.get('MEDIUM', 0) }}</span></p>
+            <p>Low: <span class="low">{{ severity_stats.get('LOW', 0) }}</span></p>
+        </div>
+
+        <div class="card">
+            <h3>🎯 Top Attackers</h3>
+            <ul>
+                {% for ip, count in top_attackers %}
+                <li>{{ ip }}: {{ count }} attacks</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>🔍 Attack Types</h3>
+            <ul>
+                {% for type, count in attack_types %}
+                <li>{{ type }}: {{ count }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>📁 Upload Log File</h3>
+        <input type="file" id="logFile">
+        <button onclick="uploadLog()">Analyze Log</button>
+        <div id="uploadResult"></div>
+    </div>
+
+    <script>
+        async function uploadLog() {
+            const fileInput = document.getElementById('logFile');
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            document.getElementById('uploadResult').innerHTML = 
+                `Threats detected: ${result.threats_detected}`;
+        }
+    </script>
+</body>
+</html>
